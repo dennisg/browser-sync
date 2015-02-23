@@ -41,17 +41,19 @@ describe("E2E server test", function () {
         instance.cleanup();
     });
 
-    it("serves files with the snippet added", function (done) {
+    it.only("serves files with the snippet added", function (done) {
 
         assert.isString(instance.options.get("snippet"));
 
-        request(instance.server)
+        request(instance.options.getIn(["urls", "local"]))
             .get("/index.html")
             .set("accept", "text/html")
             .expect(200)
             .end(function (err, res) {
+                if (err) {
+                    return done(err);
+                }
                 assert.include(res.text, instance.options.get("snippet"));
-                done();
             });
     });
 
